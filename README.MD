@@ -8,6 +8,8 @@ A script to split a TERRDATA.TDF file into its components
 
 `python tdf_loader.py`
 
+You will then be prompted for the TDF file location, the output directory, and the mipmap level (with 0 being the highest detail and 3 being the lowest)
+
 ## TDF information
 
 [RockRaidersUnited thread](https://www.rockraidersunited.com/topic/8171-tdf-terrain-format/) about the TDF format. I used the script in this thread as a basis for my explorations.
