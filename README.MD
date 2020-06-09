@@ -22,8 +22,10 @@ Each vertex consists of a height, 3 bytes for a normal map, and 3 bytes which de
 
 Here is the format for each 8 byte vertex
 
+```
 01 2 3 4 5 6 7
 h  b b b b b b
+```
 
 * The first two bytes are a 16 bit integer heightmap
 
