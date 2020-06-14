@@ -68,5 +68,37 @@ def render_heightmap(res):
         imageio.imwrite(path.join(outfilepath, f"params_{i}_mip{res}.png"), params_arrs[i])
     f.close()
 
+def render_unknown(res):
+    imgshape = (CHUNK_SIZE[res] * NUM_CHUNKS, NUM_CHUNKS * 2)
+    test_arr = numpy.empty(imgshape)
+    test_arr2 = numpy.empty(imgshape)
+    f = open(infilepath, "rb")
+    f.seek(PART_2_OFFSET[res])
+    for v in range(CHUNK_SIZE[res] * NUM_CHUNKS * NUM_CHUNKS):
+        data = unpack("hhhh", f.read(8))
+        for i in range(4):
+            short_index = v * 4 + i
+            chunk_index = short_index % (CHUNK_SIZE[res] * 4)
+            chunk_num = short_index // (CHUNK_SIZE[res] * 4)
+            chunk_x = (chunk_num % NUM_CHUNKS) * CHUNK_SIZE[res]
+            chunk_y = chunk_num // NUM_CHUNKS * 4
+
+            x = chunk_index % CHUNK_SIZE[res] + chunk_x
+            y = chunk_index // CHUNK_SIZE[res] + chunk_y
+
+            if y % 2 == 0:
+                test_arr[CHUNK_SIZE[res] * NUM_CHUNKS - x - 1][y // 2] = data[i]
+            else:
+                test_arr2[CHUNK_SIZE[res] * NUM_CHUNKS - x - 1][y // 2] = data[i]
+
+    pathlib.Path(outfilepath).mkdir(parents=True, exist_ok=True)
+    test_arr = test_arr.astype("int16")
+    imageio.imwrite(path.join(outfilepath, f"test_mip{res}_even.tiff"), test_arr)
+    test_arr2 = test_arr2.astype("int16")
+    imageio.imwrite(path.join(outfilepath, f"test_mip{res}_odd.tiff"), test_arr2)
+    f.close()
+
+
 for i in range(4):
     render_heightmap(i)
+    render_unknown(i)
