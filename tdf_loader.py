@@ -105,7 +105,45 @@ def render_unknown(res):
     imageio.imwrite(path.join(outfilepath, f"test_mip{res}_odd.tiff"), test_arr2)
     f.close()
 
+def render_float_bit():
+    mono_imgshape = (65, 65)
+    imgshape = (65, 65, 3)
+    other_float_arrs = [numpy.empty(mono_imgshape) for i in range(3)]
+    pos_arr = numpy.empty(imgshape)
+    normal_arr = numpy.empty(imgshape)
+    other_arrs = [numpy.empty(mono_imgshape) for i in range(2)]
+    f = open(infilepath, "rb")
+    f.seek(0x3af020)
+    for v in range(6400):
+        chunk_index = v % 25
+        chunk_num = v // 25
+        chunk_y = chunk_num % 16
+        chunk_x = chunk_num // 16
+        pixel_y = chunk_index % 5
+        pixel_x = chunk_index // 5
+        data = unpack("ffffffii", f.read(32))
+        pos_arr[64 - chunk_y * 4 - pixel_y][chunk_x * 4 + pixel_x] = data[:3]
+        normal_arr[64 - chunk_y * 4 - pixel_y][chunk_x * 4 + pixel_x] = [(data[3] + 1) / 2, (data[5] + 1) / 2, (data[4] + 1) / 2]
+        for i in range(2):
+            other_arrs[i][64 - chunk_y * 4 - pixel_y][chunk_x * 4 + pixel_x] = data[i + 6]
+
+    pathlib.Path(outfilepath).mkdir(parents=True, exist_ok=True)
+
+    pos_arr = pos_arr.astype("float32")
+    imageio.imwrite(path.join(outfilepath, f"float_pos.tiff"), pos_arr)
+
+    normal_arr = normal_arr.astype("float32")
+    imageio.imwrite(path.join(outfilepath, f"float_normal.tiff"), normal_arr)
+    
+    for i in range(2):
+        other_arrs[i] = other_arrs[i].astype("int32")
+        imageio.imwrite(path.join(outfilepath, f"test_float_other_{i}.tiff"), other_arrs[i])
+    f.close()
 
 for i in range(4):
     render_heightmap(i)
+    
+for i in range(3):
     render_unknown(i)
+
+render_float_bit()
