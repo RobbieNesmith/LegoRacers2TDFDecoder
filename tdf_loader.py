@@ -21,14 +21,14 @@ RES = int(input("mipmap level (high res 0, 1, 2, 3 low res): "))
 #infilepath = "/mnt/c/Program Files/Games/Lego Racers 2/GAMEDATA/GAME DATA/EDITOR GEN/TERRAIN/LOM/OKSES_LOVECHILD/TERRDATA.TDF"
 
 def render_heightmap(res):
-    imgres = (CHUNK_SIZE[RES] - 1) * NUM_CHUNKS + 1
+    imgres = (CHUNK_SIZE[res] - 1) * NUM_CHUNKS + 1
     heightmap_arr = numpy.empty((imgres, imgres))
     normalmap_arr = numpy.empty((imgres, imgres, 3))
     params_arrs = [numpy.empty((imgres, imgres)) for i in range(NUM_PARAMS)]
 
     f = open(infilepath, "rb")
-    f.read(VERTEX_OFFSET[RES])
-    T = CHUNK_SIZE[RES]
+    f.seek(VERTEX_OFFSET[res])
+    T = CHUNK_SIZE[res]
     for v in range(WORLD_VERTEX_TOTAL[res]):
         tile_y = (T - 1) * ((v // (T**2)) % NUM_CHUNKS)
         tile_x = (T - 1) * (v // (T**2 * NUM_CHUNKS))
