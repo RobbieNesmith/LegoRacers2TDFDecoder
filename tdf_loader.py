@@ -59,11 +59,11 @@ def render_heightmap(res):
 
     pathlib.Path(outfilepath).mkdir(parents=True, exist_ok=True)
     heightmap_arr = heightmap_arr.astype("int16")
-    imageio.imwrite(path.join(outfilepath, "heightmap.tiff"), heightmap_arr)
+    imageio.imwrite(path.join(outfilepath, f"heightmap_mip{res}.tiff"), heightmap_arr)
     normalmap_arr = normalmap_arr.astype("uint8")
-    imageio.imwrite(path.join(outfilepath, "normalmap.png"), normalmap_arr)
+    imageio.imwrite(path.join(outfilepath, f"normalmap_mip{res}.png"), normalmap_arr)
     for i in range(NUM_PARAMS):
         params_arrs[i] = params_arrs[i].astype("uint8")
-        imageio.imwrite(path.join(outfilepath, f"params_{i}.png"), params_arrs[i])
+        imageio.imwrite(path.join(outfilepath, f"params_{i}_mip{res}.png"), params_arrs[i])
 
 render_heightmap(RES)
