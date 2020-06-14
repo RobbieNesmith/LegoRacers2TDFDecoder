@@ -7,13 +7,14 @@ import pathlib
 CHUNK_SIZE = [17, 9, 5, 3]
 NUM_CHUNKS = 32
 VERTEX_OFFSET = [0x20, 0x242020, 0x2e4020, 0x316020]
+PART_2_OFFSET = [0x328020, 0x34a020, 0x35c020, 0x366020]
 WORLD_VERTEX_TOTAL = [x ** 2 * NUM_CHUNKS ** 2 for x in CHUNK_SIZE]
 NUM_PARAMS = 7
 MAX_INT = 2 ** 16
 
 infilepath = input("path to TERRDATA.TDF: ")
 outfilepath = input("path to directory for output images: ")
-RES = int(input("mipmap level (high res 0, 1, 2, 3 low res): "))
+#RES = int(input("mipmap level (high res 0, 1, 2, 3 low res): "))
 
 #infilepath = r'C:\Program Files\Games\LEGO Racers 2\GAMEDATA\GAME DATA\EDITOR GEN\TERRAIN\SANDY ISLAND\TERRDATA.TDF'
 #infilepath = "/mnt/c/Program Files/Games/Lego Racers 2/GAMEDATA/GAME DATA/EDITOR GEN/TERRAIN/SANDY ISLAND/TERRDATA.TDF"
@@ -67,4 +68,5 @@ def render_heightmap(res):
         imageio.imwrite(path.join(outfilepath, f"params_{i}_mip{res}.png"), params_arrs[i])
     f.close()
 
-render_heightmap(RES)
+for i in range(4):
+    render_heightmap(i)
