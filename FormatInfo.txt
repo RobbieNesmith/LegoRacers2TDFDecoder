@@ -40,7 +40,19 @@ bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb
 
 These sections look like some kind of low resolution heightmap.
 
+This is my guess of the layout:
+
+ ghijk
+5     f
+4     e
+3     d
+2     c
+1     b
+ 6789a
+
+
 0x328020 - 0x34a020 = some data for mipmap level 0 presumably (17 * 8 * 32 * 32)
+Where each index is a two byte integer along the border of a CHUNK_SIZE * CHUNK_SIZE square. The positions on the corners overlap. Then we can interpolate to get values for the vertices in the middle? I don't know what would use this though since we already have a heightmap.
 0x34a020 - 0x35c020 = some data for mipmap level 1 presumably (9 * 8 * 32 * 32)
 0x35c020 - 0x366020 = some data for mipmap level 2 presumably (5 * 8 * 32 * 32)
 
