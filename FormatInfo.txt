@@ -27,16 +27,16 @@ Each vertex's 8 bytes of data is organized like this:
 
 bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb
 \_______________/ \________________________/ |\_____/ \_______________/
-				|  |						 |      |                 |
-				|  |						 |      |                 \__4 bit maps for texture blending, haven't quite figured out how it works yet
-				|  |						 |      |
-				|  |						 |      \__Random stuff? Padding? It's different for all mipmap levels, but level 0 looks like the skybox and the last bit looks like the hole flag again
-				|  |						 |
-				|  |						 \__1 bit flag for whether there should be a hole in the terrain (for caves etc.)
-				|  |
-				|  \__3 8 bit integers for x, y, and z channels of a normal map (y is up)
-				|
-				\__16 bit integer for vertex height
+                |  |                         |      |                 |
+                |  |                         |      |                 \__4 bit maps for texture blending, haven't quite figured out how it works yet
+                |  |                         |      |
+                |  |                         |      \__Random stuff? Padding? It's different for all mipmap levels, but level 0 looks like the skybox and the last bit looks like the hole flag again
+                |  |                         |
+                |  |                         \__1 bit flag for whether there should be a hole in the terrain (for caves etc.)
+                |  |
+                |  \__3 8 bit integers for x, y, and z channels of a normal map (y is up)
+                |
+                \__16 bit integer for vertex height
 
 These sections look like some kind of low resolution heightmap.
 
@@ -58,4 +58,19 @@ Where each index is a two byte integer along the border of a CHUNK_SIZE * CHUNK_
 
 I expected another one of these for mipmap level 3, but it looks different after this point
 
+Expected:
 0x366020 - 0x36c020 = some data for mipmap level 3 presumably (3 * 8 * 32 * 32)
+
+Actual:
+0x366020 - 0x3ae020 = ????
+0x3ae020 - 0x3af020 = ????
+
+0x3af020 - 0x3e1020 = Similar to the earlier vertex data, but in 5x5 chunks and there are only 16x16 chunks total
+xxxx yyyy zzzz xxxx yyyy zzzz uuuu vvvv
+\____________/ \____________/ \_______/
+             |              |         |
+             |              |         \__int32 UV coordinates?
+             |              |
+             |              \__float32 normal map
+             |
+             \__float32 vertex location (heightmap plus values ranging from -512 to 512
