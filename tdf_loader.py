@@ -65,5 +65,6 @@ def render_heightmap(res):
     for i in range(NUM_PARAMS):
         params_arrs[i] = params_arrs[i].astype("uint8")
         imageio.imwrite(path.join(outfilepath, f"params_{i}_mip{res}.png"), params_arrs[i])
+    f.close()
 
 render_heightmap(RES)
