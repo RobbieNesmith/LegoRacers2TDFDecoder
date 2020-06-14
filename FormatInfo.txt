@@ -11,6 +11,18 @@ This appears to be the meat of the file, it includes height, normal, holes, and 
 
 There are ether 17 x 17, 9 x 9, 5 x 5, or 3 x 3 vertices per patch. The vertices on the edges overlap with adjacent patches.
 
+I have rotated the maps to correspond with TERRAINMIPPED.MIP and TERRAIN LAYERS.MIP, here is the vertex ordering
+
+Vertex indices within a chunk (Example with chunk size 3):
+789
+456
+123
+
+Chunk indices within the map (Example pretending the world is 3x3 chunks):
+369
+258
+147
+
 Each vertex's 8 bytes of data is organized like this:
 
 bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb
