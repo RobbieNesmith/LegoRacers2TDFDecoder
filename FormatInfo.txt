@@ -1,0 +1,37 @@
+TERRDATA.TDF information:
+
+0x000000 - 0x000020 = header
+
+This appears to be the meat of the file, it includes height, normal, holes, and some kind of texture map
+
+0x000020 - 0x242020 = mipmap level 0 vertex data (8 bytes per vertex, 17 * 17 * 32 * 32 verts)
+0x242020 - 0x2e4020 = mipmap level 1 vertex data (8 bytes per vertex, 9 * 9 * 32 * 32 verts)
+0x2e4020 - 0x316020 = mipmap level 2 vertex data (8 bytes per vertex, 5 * 5 * 32 * 32 verts)
+0x316020 - 0x328020 = mipmap level 3 vertex data (8 bytes per vertex, 3 * 3 * 32 * 32 verts)
+
+There are ether 17 x 17, 9 x 9, 5 x 5, or 3 x 3 vertices per patch. The vertices on the edges overlap with adjacent patches.
+
+Each vertex's 8 bytes of data is organized like this:
+
+bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb bbbbbbbb
+\_______________/ \________________________/ |\_____/ \_______________/
+				|  |						 |      |                 |
+				|  |						 |      |                 \__4 bit maps for texture blending, haven't quite figured out how it works yet
+				|  |						 |      |
+				|  |						 |      \__Random stuff? Padding? It's different for all mipmap levels, but level 0 looks like the skybox and the last bit looks like the hole flag again
+				|  |						 |
+				|  |						 \__1 bit flag for whether there should be a hole in the terrain (for caves etc.)
+				|  |
+				|  \__3 8 bit integers for x, y, and z channels of a normal map (y is up)
+				|
+				\__16 bit integer for vertex height
+
+These sections look like some kind of low resolution heightmap.
+
+0x328020 - 0x34a020 = some data for mipmap level 0 presumably (17 * 8 * 32 * 32)
+0x34a020 - 0x35c020 = some data for mipmap level 1 presumably (9 * 8 * 32 * 32)
+0x35c020 - 0x366020 = some data for mipmap level 2 presumably (5 * 8 * 32 * 32)
+
+I expected another one of these for mipmap level 3, but it looks different after this point
+
+0x366020 - 0x36c020 = some data for mipmap level 3 presumably (3 * 8 * 32 * 32)
