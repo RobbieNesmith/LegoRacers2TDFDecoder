@@ -70,8 +70,9 @@ def render_heightmap(res):
 
 def render_unknown(res):
     imgshape = (CHUNK_SIZE[res] * NUM_CHUNKS, NUM_CHUNKS * 2)
+    imgshape_odd = (NUM_CHUNKS * 2, CHUNK_SIZE[res] * NUM_CHUNKS)
     test_arr = numpy.empty(imgshape)
-    test_arr2 = numpy.empty(imgshape)
+    test_arr2 = numpy.empty(imgshape_odd)
     f = open(infilepath, "rb")
     f.seek(PART_2_OFFSET[res])
     for v in range(CHUNK_SIZE[res] * NUM_CHUNKS * NUM_CHUNKS):
@@ -80,16 +81,22 @@ def render_unknown(res):
             short_index = v * 4 + i
             chunk_index = short_index % (CHUNK_SIZE[res] * 4)
             chunk_num = short_index // (CHUNK_SIZE[res] * 4)
-            chunk_x = (chunk_num % NUM_CHUNKS) * CHUNK_SIZE[res]
-            chunk_y = chunk_num // NUM_CHUNKS * 4
+            chunk_x = (chunk_num % NUM_CHUNKS)
+            chunk_y = chunk_num // NUM_CHUNKS
 
-            x = chunk_index % CHUNK_SIZE[res] + chunk_x
-            y = chunk_index // CHUNK_SIZE[res] + chunk_y
+            x = chunk_index % CHUNK_SIZE[res]
+            y = chunk_index // CHUNK_SIZE[res]
+
+            even_x = x + CHUNK_SIZE[res] * chunk_x
+            even_y = (y + 4 * chunk_y) // 2
+
+            odd_x = (4 * chunk_x + y) // 2
+            odd_y = CHUNK_SIZE[res] * chunk_y + x
 
             if y % 2 == 0:
-                test_arr[CHUNK_SIZE[res] * NUM_CHUNKS - x - 1][y // 2] = data[i]
+                test_arr[CHUNK_SIZE[res] * NUM_CHUNKS - even_x - 1][even_y] = data[i]
             else:
-                test_arr2[CHUNK_SIZE[res] * NUM_CHUNKS - x - 1][y // 2] = data[i]
+                test_arr2[2 * NUM_CHUNKS - odd_x - 1][odd_y] = data[i]
 
     pathlib.Path(outfilepath).mkdir(parents=True, exist_ok=True)
     test_arr = test_arr.astype("int16")
